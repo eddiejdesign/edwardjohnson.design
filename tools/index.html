@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tools — Edward Johnson</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      display: block;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-top: 40px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--fg-muted);
+    }
+
+    .home-link:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Tools</h1>
+    <p class="subtitle">Small utilities, hosted here.</p>
+
+    <div class="grid">
+      <a class="card" href="grocery-list/">
+        <div class="card-title">Grocery List</div>
+        <div class="card-desc">Add, check off, and clear items. Saved to this device.</div>
+      </a>
+      <a class="card" href="game-tracker/">
+        <div class="card-title">Game Tracker</div>
+        <div class="card-desc">Track scores across players for a round of any game.</div>
+      </a>
+    </div>
+
+    <a class="home-link" href="../">&larr; edwardjohnson.design</a>
+  </div>
+</body>
+</html>

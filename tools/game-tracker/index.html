@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Tracker — Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .add-row input {
+      flex: 1;
+    }
+
+    ul.players {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .player-name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .score-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-controls button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 16px;
+      line-height: 1;
+      border-radius: 6px;
+    }
+
+    .score-value {
+      min-width: 32px;
+      text-align: center;
+      font-size: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--fg-muted);
+    }
+
+    .footer-row button {
+      background: transparent;
+      border: none;
+      padding: 4px 0;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .footer-row button:hover {
+      color: var(--accent);
+    }
+
+    .leader {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back-link" href="../">&larr; Tools</a>
+    <h1>Game Tracker</h1>
+    <p class="subtitle">Track scores for a round. Saved locally to this device.</p>
+
+    <form class="add-row" id="add-form">
+      <input type="text" id="player-input" placeholder="Add a player…" autocomplete="off" autofocus>
+      <button type="submit" class="primary">Add</button>
+    </form>
+
+    <ul class="players" id="players"></ul>
+    <p class="empty-state" id="empty" hidden>No players yet.</p>
+
+    <div class="footer-row">
+      <span></span>
+      <button type="button" id="reset-scores">Reset scores</button>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'tools.game-tracker';
+    const form = document.getElementById('add-form');
+    const input = document.getElementById('player-input');
+    const list = document.getElementById('players');
+    const empty = document.getElementById('empty');
+    const resetBtn = document.getElementById('reset-scores');
+
+    let players = load();
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+    }
+
+    function render() {
+      list.innerHTML = '';
+      empty.hidden = players.length > 0;
+
+      const maxScore = players.length ? Math.max(...players.map(p => p.score)) : null;
+
+      players.forEach(player => {
+        const li = document.createElement('li');
+        li.className = 'player';
+
+        const name = document.createElement('span');
+        name.className = 'player-name' + (maxScore !== null && player.score === maxScore && maxScore > 0 ? ' leader' : '');
+        name.textContent = player.name;
+
+        const controls = document.createElement('div');
+        controls.className = 'score-controls';
+
+        const minusBtn = document.createElement('button');
+        minusBtn.type = 'button';
+        minusBtn.textContent = '−';
+        minusBtn.addEventListener('click', () => {
+          player.score -= 1;
+          save();
+          render();
+        });
+
+        const scoreValue = document.createElement('span');
+        scoreValue.className = 'score-value';
+        scoreValue.textContent = player.score;
+
+        const plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        plusBtn.textContent = '+';
+        plusBtn.addEventListener('click', () => {
+          player.score += 1;
+          save();
+          render();
+        });
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'icon-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.setAttribute('aria-label', 'Remove player');
+        removeBtn.addEventListener('click', () => {
+          players = players.filter(p => p.id !== player.id);
+          save();
+          render();
+        });
+
+        controls.append(minusBtn, scoreValue, plusBtn);
+        li.append(name, controls, removeBtn);
+        list.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = input.value.trim();
+      if (!name) return;
+      players.push({ id: crypto.randomUUID(), name, score: 0 });
+      input.value = '';
+      save();
+      render();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      players.forEach(p => p.score = 0);
+      save();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

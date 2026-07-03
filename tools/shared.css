@@ -1,0 +1,131 @@
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --fg-muted: rgba(255, 255, 255, 0.55);
+  --accent: #FF6C5F;
+  --border: rgba(255, 255, 255, 0.14);
+  --surface: rgba(255, 255, 255, 0.06);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--fg-muted);
+  transition: color 0.2s ease;
+  margin-bottom: 40px;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--fg-muted);
+  margin-bottom: 32px;
+}
+
+input, button, select {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+input::placeholder {
+  color: var(--fg-muted);
+}
+
+input:focus, button:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+button {
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 500;
+}
+
+button.primary:hover {
+  opacity: 0.85;
+  color: #000;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--fg-muted);
+  padding: 4px 8px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-btn:hover {
+  color: var(--accent);
+}
+
+.empty-state {
+  color: var(--fg-muted);
+  font-size: 13px;
+  padding: 24px 0;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}

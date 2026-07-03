@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery List — Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .add-row input {
+      flex: 1;
+    }
+
+    ul.items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      padding: 0;
+    }
+
+    .item input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: solid #000;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .item-label {
+      flex: 1;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .item.checked .item-label {
+      text-decoration: line-through;
+      color: var(--fg-muted);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--fg-muted);
+    }
+
+    .footer-row button {
+      background: transparent;
+      border: none;
+      padding: 4px 0;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .footer-row button:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back-link" href="../">&larr; Tools</a>
+    <h1>Grocery List</h1>
+    <p class="subtitle">Saved locally to this device.</p>
+
+    <form class="add-row" id="add-form">
+      <input type="text" id="item-input" placeholder="Add an item…" autocomplete="off" autofocus>
+      <button type="submit" class="primary">Add</button>
+    </form>
+
+    <ul class="items" id="items"></ul>
+    <p class="empty-state" id="empty" hidden>Your list is empty.</p>
+
+    <div class="footer-row">
+      <span id="count"></span>
+      <button type="button" id="clear-checked">Clear checked</button>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'tools.grocery-list';
+    const form = document.getElementById('add-form');
+    const input = document.getElementById('item-input');
+    const list = document.getElementById('items');
+    const empty = document.getElementById('empty');
+    const count = document.getElementById('count');
+    const clearCheckedBtn = document.getElementById('clear-checked');
+
+    let items = load();
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function render() {
+      list.innerHTML = '';
+      empty.hidden = items.length > 0;
+
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'item' + (item.checked ? ' checked' : '');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.checked;
+        checkbox.addEventListener('change', () => {
+          item.checked = checkbox.checked;
+          save();
+          render();
+        });
+
+        const label = document.createElement('span');
+        label.className = 'item-label';
+        label.textContent = item.text;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'icon-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.setAttribute('aria-label', 'Remove item');
+        removeBtn.addEventListener('click', () => {
+          items = items.filter(i => i.id !== item.id);
+          save();
+          render();
+        });
+
+        li.append(checkbox, label, removeBtn);
+        list.appendChild(li);
+      });
+
+      const remaining = items.filter(i => !i.checked).length;
+      count.textContent = items.length
+        ? `${remaining} of ${items.length} remaining`
+        : '';
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      items.push({ id: crypto.randomUUID(), text, checked: false });
+      input.value = '';
+      save();
+      render();
+    });
+
+    clearCheckedBtn.addEventListener('click', () => {
+      items = items.filter(i => !i.checked);
+      save();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
