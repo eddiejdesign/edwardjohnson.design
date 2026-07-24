@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Hub — Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .setup-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .setup-card h2 {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .setup-card ol {
+      margin: 10px 0 0 18px;
+      font-size: 13px;
+      color: var(--fg-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .setup-card code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 12px;
+      color: var(--fg);
+    }
+
+    .topic-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .topic-row input {
+      flex: 1;
+    }
+
+    .topic-bar:not([hidden]) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+      font-size: 12px;
+      color: var(--fg-muted);
+    }
+
+    .topic-bar strong {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .topic-bar button {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .topic-bar button:hover {
+      color: var(--accent);
+    }
+
+    .compose {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .row-2 {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row-2 > * {
+      flex: 1;
+    }
+
+    textarea {
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--fg);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      resize: vertical;
+      min-height: 64px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .status-msg {
+      font-size: 12px;
+      min-height: 16px;
+    }
+
+    .status-msg.ok { color: var(--accent); }
+    .status-msg.err { color: #ff6c5f; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-heading h2 {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .section-heading .actions {
+      display: flex;
+      gap: 14px;
+    }
+
+    .section-heading button {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .section-heading button:hover {
+      color: var(--accent);
+    }
+
+    ul.history {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .entry-tag {
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .entry-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entry-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .entry-message {
+      font-size: 13px;
+      color: var(--fg-muted);
+      word-break: break-word;
+      margin-top: 2px;
+    }
+
+    .entry-meta {
+      font-size: 11px;
+      color: var(--fg-muted);
+      margin-top: 6px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .entry-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back-link" href="../">&larr; Tools</a>
+    <h1>Notification Hub</h1>
+    <p class="subtitle">Send yourself deal and promo alerts as real Android notifications, instead of email.</p>
+
+    <div id="setup" class="setup-card" hidden>
+      <h2>One-time setup</h2>
+      <p style="font-size: 13px; color: var(--fg-muted);">This hub delivers notifications through <strong>ntfy</strong>, a free push service. No account needed.</p>
+      <ol>
+        <li>Install the <strong>ntfy</strong> app from the Play Store on your Pixel.</li>
+        <li>In the app, tap <strong>+</strong> and subscribe to the topic below (keep it private — anyone who knows it can send to it).</li>
+        <li>Come back here to compose alerts. They'll show up on your phone within seconds.</li>
+      </ol>
+      <div class="topic-row">
+        <input type="text" id="topic-input" placeholder="topic name" autocomplete="off">
+        <button type="button" class="primary" id="save-topic">Save</button>
+      </div>
+    </div>
+
+    <div id="topic-bar" class="topic-bar" hidden>
+      <span>ntfy topic: <strong id="topic-name"></strong></span>
+      <button type="button" id="change-topic">Change</button>
+    </div>
+
+    <form class="compose" id="compose-form">
+      <input type="text" id="c-title" placeholder="Title (e.g. REI — 30% off)" autocomplete="off">
+      <textarea id="c-message" placeholder="Message — the deal, promo, or product alert details…" required></textarea>
+      <div class="row-2">
+        <select id="c-category">
+          <option value="promotion">📢 Promotion</option>
+          <option value="deal">💰 Deal</option>
+          <option value="product">🔔 Product alert</option>
+          <option value="general">✨ General</option>
+        </select>
+        <select id="c-priority">
+          <option value="min">Priority: Low</option>
+          <option value="default" selected>Priority: Default</option>
+          <option value="high">Priority: High</option>
+          <option value="urgent">Priority: Urgent</option>
+        </select>
+      </div>
+      <input type="url" id="c-link" placeholder="Link (optional — tapping the notification opens this)" autocomplete="off">
+      <button type="submit" class="primary" id="send-btn">Send to phone</button>
+      <p class="status-msg" id="status"></p>
+    </form>
+
+    <div class="section-heading">
+      <h2>History</h2>
+      <div class="actions">
+        <button type="button" id="sync-btn">Sync</button>
+        <button type="button" id="clear-btn">Clear</button>
+      </div>
+    </div>
+
+    <ul class="history" id="history"></ul>
+    <p class="empty-state" id="empty" hidden>No notifications yet.</p>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'tools.notification-hub';
+    const NTFY_BASE = 'https://ntfy.sh';
+
+    const CATEGORY_META = {
+      promotion: { emoji: '📢', tag: 'loudspeaker', label: 'Promotion' },
+      deal:      { emoji: '💰', tag: 'moneybag',    label: 'Deal' },
+      product:   { emoji: '🔔', tag: 'bell',        label: 'Product alert' },
+      general:   { emoji: '✨', tag: 'sparkles',     label: 'General' },
+    };
+
+    const setupCard = document.getElementById('setup');
+    const topicBar = document.getElementById('topic-bar');
+    const topicName = document.getElementById('topic-name');
+    const topicInput = document.getElementById('topic-input');
+    const saveTopicBtn = document.getElementById('save-topic');
+    const changeTopicBtn = document.getElementById('change-topic');
+
+    const composeForm = document.getElementById('compose-form');
+    const titleInput = document.getElementById('c-title');
+    const messageInput = document.getElementById('c-message');
+    const categorySelect = document.getElementById('c-category');
+    const prioritySelect = document.getElementById('c-priority');
+    const linkInput = document.getElementById('c-link');
+    const sendBtn = document.getElementById('send-btn');
+    const statusMsg = document.getElementById('status');
+
+    const syncBtn = document.getElementById('sync-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const historyList = document.getElementById('history');
+    const emptyState = document.getElementById('empty');
+
+    let state = load();
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : { topic: '', history: [] };
+      } catch {
+        return { topic: '', history: [] };
+      }
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function randomTopic() {
+      return 'ej-alerts-' + crypto.randomUUID().split('-')[0];
+    }
+
+    function renderTopic() {
+      if (state.topic) {
+        setupCard.hidden = true;
+        topicBar.hidden = false;
+        topicName.textContent = state.topic;
+      } else {
+        setupCard.hidden = false;
+        topicBar.hidden = true;
+        topicInput.value = randomTopic();
+      }
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      const items = [...state.history].sort((a, b) => b.ts - a.ts);
+      emptyState.hidden = items.length > 0;
+
+      items.forEach(entry => {
+        const meta = CATEGORY_META[entry.category] || CATEGORY_META.general;
+        const li = document.createElement('li');
+        li.className = 'entry';
+
+        const tag = document.createElement('span');
+        tag.className = 'entry-tag';
+        tag.textContent = meta.emoji;
+
+        const body = document.createElement('div');
+        body.className = 'entry-body';
+
+        const title = document.createElement('div');
+        title.className = 'entry-title';
+        title.textContent = entry.title || meta.label;
+
+        const message = document.createElement('div');
+        message.className = 'entry-message';
+        message.textContent = entry.message;
+
+        const metaRow = document.createElement('div');
+        metaRow.className = 'entry-meta';
+        const time = document.createElement('span');
+        time.textContent = new Date(entry.ts).toLocaleString();
+        metaRow.appendChild(time);
+        if (entry.link) {
+          const link = document.createElement('a');
+          link.href = entry.link;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = 'Open link';
+          metaRow.appendChild(link);
+        }
+
+        body.append(title, message, metaRow);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'icon-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.setAttribute('aria-label', 'Remove entry');
+        removeBtn.addEventListener('click', () => {
+          state.history = state.history.filter(e => e.id !== entry.id);
+          save();
+          renderHistory();
+        });
+
+        li.append(tag, body, removeBtn);
+        historyList.appendChild(li);
+      });
+    }
+
+    function setStatus(text, kind) {
+      statusMsg.textContent = text;
+      statusMsg.className = 'status-msg' + (kind ? ' ' + kind : '');
+    }
+
+    saveTopicBtn.addEventListener('click', () => {
+      const value = topicInput.value.trim();
+      if (!value) return;
+      state.topic = value;
+      save();
+      renderTopic();
+    });
+
+    changeTopicBtn.addEventListener('click', () => {
+      state.topic = '';
+      save();
+      renderTopic();
+    });
+
+    composeForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!state.topic) {
+        setStatus('Set up a topic first.', 'err');
+        return;
+      }
+
+      const title = titleInput.value.trim();
+      const message = messageInput.value.trim();
+      if (!message) return;
+
+      const category = categorySelect.value;
+      const priority = prioritySelect.value;
+      const link = linkInput.value.trim();
+      const meta = CATEGORY_META[category];
+
+      sendBtn.disabled = true;
+      setStatus('Sending…');
+
+      try {
+        const headers = { Priority: priority, Tags: meta.tag };
+        if (title) headers.Title = title;
+        if (link) headers.Click = link;
+
+        const res = await fetch(`${NTFY_BASE}/${encodeURIComponent(state.topic)}`, {
+          method: 'POST',
+          headers,
+          body: message,
+        });
+
+        if (!res.ok) throw new Error(`ntfy responded ${res.status}`);
+
+        state.history.push({
+          id: crypto.randomUUID(),
+          title, message, category, link,
+          ts: Date.now(),
+        });
+        save();
+        renderHistory();
+
+        titleInput.value = '';
+        messageInput.value = '';
+        linkInput.value = '';
+        setStatus('Sent to your phone.', 'ok');
+      } catch (err) {
+        setStatus(`Failed to send: ${err.message}`, 'err');
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+
+    syncBtn.addEventListener('click', async () => {
+      if (!state.topic) return;
+      setStatus('Syncing…');
+      try {
+        const res = await fetch(`${NTFY_BASE}/${encodeURIComponent(state.topic)}/json?poll=1&since=12h`);
+        if (!res.ok) throw new Error(`ntfy responded ${res.status}`);
+        const text = await res.text();
+        const known = new Set(state.history.map(e => e.ntfyId).filter(Boolean));
+
+        text.trim().split('\n').filter(Boolean).forEach(line => {
+          const msg = JSON.parse(line);
+          if (msg.event !== 'message' || known.has(msg.id)) return;
+          const tag = (msg.tags || [])[0];
+          const category = Object.keys(CATEGORY_META).find(k => CATEGORY_META[k].tag === tag) || 'general';
+          state.history.push({
+            id: crypto.randomUUID(),
+            ntfyId: msg.id,
+            title: msg.title || '',
+            message: msg.message || '',
+            category,
+            link: msg.click || '',
+            ts: msg.time * 1000,
+          });
+        });
+
+        save();
+        renderHistory();
+        setStatus('Synced.', 'ok');
+      } catch (err) {
+        setStatus(`Sync failed: ${err.message}`, 'err');
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      if (!state.history.length) return;
+      state.history = [];
+      save();
+      renderHistory();
+    });
+
+    renderTopic();
+    renderHistory();
+  </script>
+</body>
+</html>
