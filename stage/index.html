@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Eddie Johnson — Sr. Designer</title>
+  <link rel="preload" href="fonts/AvenirLTStd-Heavy.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/AvenirLTStd-Roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stage.css">
+  <script src="vault.js"></script>
+  <style>
+    .locked {
+      position: relative;
+      overflow-x: clip;
+    }
+
+    .locked .cards {
+      gap: 31px;
+      filter: blur(46.4px);
+    }
+
+    .locked .card-body {
+      gap: 6px;
+    }
+
+    .locked-veil {
+      position: absolute;
+      inset: 0 0 -80px;
+      background: rgba(23, 23, 23, 0.5);
+    }
+
+    .locked + .site-footer {
+      padding-top: 80px;
+      height: 123px;
+    }
+
+    .gate {
+      position: absolute;
+      z-index: 2;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 233px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gate input {
+      height: 53px;
+      padding: 0 21px;
+      background: transparent;
+      border: 1px solid #fff;
+      border-radius: 0;
+      color: #fff;
+      font: inherit;
+      font-weight: 500;
+      font-size: 18px;
+      outline: none;
+    }
+
+    .gate input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .gate input:focus-visible {
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+    }
+
+    .gate .btn {
+      width: 100%;
+      height: 53px;
+    }
+
+    .gate .btn:disabled {
+      opacity: 0.7;
+      cursor: progress;
+    }
+
+    .gate-error {
+      min-height: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .gate {
+        top: 23px;
+      }
+
+      .locked .cards {
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="./" aria-label="Eddie Johnson — home"><svg viewBox="0 0 25 25" fill="#fff" aria-hidden="true"><rect x="0" y="14.29" width="3.571" height="10.714"/><rect x="3.57" y="21.43" width="17.857" height="3.571"/><rect x="21.43" y="0" width="3.571" height="25"/><rect x="7.14" y="14.29" width="10.714" height="3.571"/><rect x="7.14" y="7.14" width="10.714" height="3.571"/><rect x="7.14" y="0" width="10.714" height="3.571"/></svg></a>
+    <nav>
+      <a href="Edward_Johnson_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <div class="profile">
+      <div class="portrait"><img src="assets/portrait.jpg" width="208" height="208" alt="Eddie Johnson"></div>
+      <div class="profile-text">
+        <h1 class="profile-name">Eddie Johnson</h1>
+        <p class="profile-role">Sr. Designer</p>
+        <p class="profile-bio">A graphic designer that loves nothing more than stressing about pixels.</p>
+        <div class="profile-links">
+          <a href="https://www.linkedin.com/in/edward-johnson-09353a86" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/icon-linkedin.png" width="23" height="23" alt=""></a>
+          <a href="mailto:eddiej.design@gmail.com" aria-label="Email"><img src="assets/icon-email.png" width="30" height="30" alt=""></a>
+          <a href="sms:+18106279561" aria-label="Text message"><img src="assets/icon-sms.png" width="27" height="30" alt=""></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <main class="locked">
+    <div class="cards">
+      <article class="card" aria-hidden="true">
+        <div class="card-body">
+          <p class="card-title">Locked Content</p>
+          <p class="card-desc">Please email eddiej.design@gmail.com for portfolio password access</p>
+        </div>
+        <div class="card-media"><img src="assets/locked-card.jpg" width="720" height="399" alt=""></div>
+      </article>
+      <article class="card" aria-hidden="true">
+        <div class="card-body">
+          <p class="card-title">Locked Content</p>
+          <p class="card-desc">Please email eddiej.design@gmail.com for portfolio password access</p>
+        </div>
+        <div class="card-media"><img src="assets/locked-card.jpg" width="720" height="399" alt=""></div>
+      </article>
+      <article class="card" aria-hidden="true">
+        <div class="card-body">
+          <p class="card-title">Locked Content</p>
+          <p class="card-desc">Please email eddiej.design@gmail.com for portfolio password access</p>
+        </div>
+        <div class="card-media"><img src="assets/locked-card.jpg" width="720" height="399" alt=""></div>
+      </article>
+    </div>
+    <div class="locked-veil"></div>
+    <form class="gate" id="gate">
+      <input id="password" type="password" placeholder="Enter password" autocomplete="current-password" aria-label="Password" required>
+      <button class="btn" type="submit"><span>Submit</span> <svg class="arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h9"/><path d="M10 13l4-4-4-4"/></svg></button>
+      <p class="gate-error" id="gate-error" role="alert"></p>
+    </form>
+  </main>
+  <footer class="site-footer">Eddie Johnson • 2026 • Designed in Figma • Developed with Claude Code</footer>
+  <script>
+    (function () {
+      function nextUrl() {
+        var next = new URLSearchParams(location.search).get('next');
+        return next && /^\/stage\/[\w\-\/]*$/.test(next) ? next : 'work/';
+      }
+
+      if (Vault.unlocked()) location.replace(nextUrl());
+
+      var form = document.getElementById('gate');
+      var input = document.getElementById('password');
+      var button = form.querySelector('button');
+      var label = button.querySelector('span');
+      var error = document.getElementById('gate-error');
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        button.disabled = true;
+        label.textContent = 'Unlocking…';
+        error.textContent = '';
+        var ok = false;
+        try { ok = await Vault.unlock(input.value); } catch (err) {}
+        if (ok) {
+          location.href = nextUrl();
+          return;
+        }
+        button.disabled = false;
+        label.textContent = 'Submit';
+        error.textContent = 'Incorrect password';
+        input.select();
+      });
+    })();
+  </script>
+</body>
+</html>
