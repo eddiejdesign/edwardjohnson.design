@@ -283,7 +283,7 @@ img {
   max-width: calc(100% - 2 * var(--gutter));
   margin: 0 auto;
   border: 0;
-  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  border-top: 2px solid var(--card-border);
 }
 
 /* ---------- Project page ---------- */
@@ -301,7 +301,7 @@ img {
   justify-content: center;
   padding-top: 51px;
   height: 524px;
-  background: var(--bg) url('assets/hero-bg.jpg') center top / cover no-repeat;
+  background: var(--bg) url('assets/project-hero-bg.jpg') center top / cover no-repeat;
 }
 
 .project-hero .card-body {
@@ -315,7 +315,7 @@ img {
 
 .project-hero-media {
   width: 480px;
-  align-self: center;
+  margin-top: 30.67px;
 }
 
 .project-hero-media img {
@@ -375,8 +375,13 @@ img {
   gap: 6px;
 }
 
-.split.center .text-block {
-  padding-top: 0;
+.split.final {
+  /* Figma frame is 381px; the image overhangs it, so the next gap starts at the frame edge. */
+  height: 381px;
+}
+
+.split.final .text-block {
+  padding-top: 159px;
 }
 
 .text-block h2 {
@@ -511,8 +516,13 @@ img {
     gap: 24px;
   }
 
-  .text-block {
+  .text-block,
+  .split.final .text-block {
     padding: 0;
+  }
+
+  .split.final {
+    height: auto;
   }
 
   .project-hero {

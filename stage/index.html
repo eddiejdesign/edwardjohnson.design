@@ -26,8 +26,13 @@
 
     .locked-veil {
       position: absolute;
-      inset: 0 0 -56px;
+      inset: 0 0 -80px;
       background: rgba(23, 23, 23, 0.5);
+    }
+
+    .locked + .site-footer {
+      padding-top: 80px;
+      height: 123px;
     }
 
     .gate {
@@ -139,7 +144,7 @@
     <div class="locked-veil"></div>
     <form class="gate" id="gate">
       <input id="password" type="password" placeholder="Enter password" autocomplete="current-password" aria-label="Password" required>
-      <button class="btn" type="submit"><span>Submit</span> <svg class="arrow" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><rect x="4" y="8" width="7" height="2"/><path d="M10 5l4 4-4 4z"/></svg></button>
+      <button class="btn" type="submit"><span>Submit</span> <svg class="arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h9"/><path d="M10 13l4-4-4-4"/></svg></button>
       <p class="gate-error" id="gate-error" role="alert"></p>
     </form>
   </main>
