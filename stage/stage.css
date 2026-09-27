@@ -19,6 +19,27 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   --bg: #171717;
   --bg-band: #1d1d1d;
@@ -543,6 +564,186 @@ img {
   color: var(--fg-muted);
 }
 
+/* ---------- Project 2 ---------- */
+
+/* Hero variant: 360px text column + 600px media, both centred in the 524px band. */
+.project-hero.hero-wide {
+  padding-top: 0;
+  align-items: center;
+  background-image: url('assets/project-2-hero-bg.jpg');
+}
+
+.project-hero.hero-wide .card-body {
+  width: 360px;
+  gap: 6px;
+}
+
+.hero-video {
+  position: relative;
+  width: 600px;
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.hero-video img {
+  width: 600px;
+  height: auto;
+}
+
+.media-video.fill {
+  left: 0;
+  width: 100%;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.shot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.shot-label {
+  font-weight: 800;
+  font-size: 14px;
+  text-align: center;
+}
+
+.shot img {
+  width: 100%;
+  height: auto;
+}
+
+/* The sticker art overhangs its 600x265 frame by a few px (shadows, rotation). */
+.categories {
+  position: relative;
+  height: 265px;
+}
+
+.categories img {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 604px;
+  max-width: none;
+  height: auto;
+}
+
+.wcag {
+  background: var(--bg-band);
+  padding: 20px 40px;
+  overflow: hidden;
+}
+
+.wcag-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 15.83px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 9.6px;
+  line-height: normal;
+}
+
+.wcag-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6.4px;
+}
+
+.wcag-hex {
+  font-weight: 600;
+  line-height: 12px;
+}
+
+.wcag-swatch,
+.wcag-on {
+  position: relative;
+  width: 96.02px;
+  overflow: hidden;
+}
+
+.wcag-swatch {
+  height: 96.02px;
+}
+
+.wcag-on {
+  height: 40.01px;
+}
+
+.wcag-on.on-white {
+  background: #fff;
+  border: 0.8px solid #e6e6e6;
+}
+
+.wcag-on.on-black {
+  background: #000;
+}
+
+.wcag-text,
+.wcag-mark {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.wcag-mark {
+  font-weight: 700;
+  font-size: 11.2px;
+}
+
+.wcag-mark.lt.pass { color: #008000; }
+.wcag-mark.lt.fail { color: #c00; }
+.wcag-mark.dk.pass { color: #80ff80; }
+.wcag-mark.dk.fail { color: #f66; }
+
+.on-swatch-black { left: 7.2px; top: 11.2px; color: #000; }
+.on-swatch-white { left: 7.2px; top: 28.01px; color: #fff; }
+.m-black { left: 76.01px; top: 9.6px; }
+.m-white { left: 76.01px; top: 26.4px; }
+.on-white .wcag-text { left: 6.4px; top: 12.8px; }
+.on-white .wcag-mark { left: 79.22px; top: 12px; }
+.on-black .wcag-text { left: 7.2px; top: 13.6px; }
+.on-black .wcag-mark { left: 80.02px; top: 12.8px; }
+
+.wcag-caption {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.device-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.device-panel {
+  position: relative;
+  background: var(--panel);
+}
+
+.device-panel img {
+  width: 100%;
+  height: auto;
+}
+
+.device-panel figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 93.95%;
+  text-align: center;
+  font-size: 14px;
+}
+
+.device-panel.phones figcaption {
+  top: 93.04%;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1100px) {
@@ -588,11 +789,56 @@ img {
   .project-hero-media img {
     width: 100%;
   }
+
+  .project-hero.hero-wide {
+    align-items: center;
+    padding-top: 96px;
+  }
+
+  .project-hero.hero-wide .card-body {
+    max-width: 480px;
+  }
+
+  .hero-video {
+    max-width: 600px;
+  }
 }
 
 @media (max-width: 900px) {
   :root {
     --gutter: 15px;
+  }
+
+  .grid-3,
+  .device-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-3 {
+    gap: 24px;
+  }
+
+  .categories {
+    height: auto;
+  }
+
+  .categories img {
+    position: static;
+    width: 100%;
+  }
+
+  .wcag {
+    padding: 20px 16px;
+  }
+
+  .wcag-grid {
+    grid-template-columns: repeat(auto-fill, 96.02px);
+    justify-content: center;
+  }
+
+  .device-panel figcaption {
+    position: static;
+    padding: 0 16px 14px;
   }
 
   .hero {

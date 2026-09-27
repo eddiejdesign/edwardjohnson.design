@@ -9,7 +9,6 @@
   <link rel="preload" href="../../fonts/AvenirLTStd-Roman.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../stage.css">
   <script src="../../vault.js"></script>
-  <script>Vault.guard();</script>
 </head>
 <body>
   <header class="topbar">
@@ -19,11 +18,7 @@
       <a href="../../Edward_Johnson_Resume.pdf" target="_blank" rel="noopener">Resume</a>
     </nav>
   </header>
-  <main class="coming-soon">
-    <h1>Coming soon</h1>
-    <p>This case study is still being written.</p>
-    <a class="btn" style="width:auto;padding:0 20px" href="../">Back to work</a>
-  </main>
+  <main id="vault" data-page="project-2"></main>
   <div class="pager-wrap">
     <nav class="pager" aria-label="Projects">
       <a class="prev" href="../project-1/"><svg class="arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h9"/><path d="M10 13l4-4-4-4"/></svg> Previous Project</a>
@@ -33,5 +28,16 @@
     <hr class="divider">
   </div>
   <footer class="site-footer">Eddie Johnson • 2026 • Designed in Figma • Developed with Claude Code</footer>
+  <script>
+    (function () {
+      if (!Vault.guard()) return;
+      var mount = document.getElementById('vault');
+      Vault.loadPage(mount.dataset.page, mount).catch(function () {
+        // Key no longer matches the vault (e.g. the password changed): sign in again.
+        Vault.lock();
+        Vault.guard();
+      });
+    })();
+  </script>
 </body>
 </html>
