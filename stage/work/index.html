@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <script src="../gate.js"></script>
+  <title>Work — Edward Johnson</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/vde1hxg.css">
+  <link rel="stylesheet" href="../stage.css">
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+    }
+
+    .card .placeholder {
+      margin-bottom: 12px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .card:hover .placeholder {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .card-title {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage-banner">Staging preview</div>
+  <main class="page">
+    <nav class="nav">
+      <a href="../">Edward Johnson</a>
+      <a href="mailto:eddiej.design@gmail.com">Contact</a>
+    </nav>
+
+    <h1>Work</h1>
+    <p class="lede">Selected projects.</p>
+
+    <div class="grid">
+      <a class="card" href="project-1/">
+        <div class="placeholder">Thumbnail</div>
+        <p class="card-title">Project 1</p>
+      </a>
+      <a class="card" href="project-2/">
+        <div class="placeholder">Thumbnail</div>
+        <p class="card-title">Project 2</p>
+      </a>
+      <a class="card" href="project-3/">
+        <div class="placeholder">Thumbnail</div>
+        <p class="card-title">Project 3</p>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Edward Johnson</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/vde1hxg.css">
+  <link rel="stylesheet" href="stage.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 280px;
+      padding: 0 16px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    form {
+      display: flex;
+      width: 100%;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.2s ease;
+    }
+
+    form:focus-within {
+      border-color: var(--accent);
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      background: none;
+      border: 0;
+      outline: 0;
+      color: var(--fg);
+      font: inherit;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      padding: 8px 0;
+    }
+
+    button {
+      background: none;
+      border: 0;
+      color: var(--fg-muted);
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    button:hover {
+      color: var(--accent);
+    }
+
+    .error {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage-banner">Staging preview</div>
+  <div class="container">
+    <p class="title">Edward Johnson</p>
+    <form id="gate" autocomplete="off">
+      <input id="password" type="password" placeholder="Password" aria-label="Password" autofocus>
+      <button type="submit">Enter</button>
+    </form>
+    <p class="error" id="error" role="alert"></p>
+  </div>
+
+  <script>
+    // SHA-256 of the staging password. Swap this hash to change it.
+    var HASH = '5975cf1bba432391c94667f5886225f69377c0aa8b9fa21fddfb21c89bcf9092';
+    var KEY = 'stage.unlocked';
+
+    function nextUrl() {
+      var next = new URLSearchParams(location.search).get('next');
+      // Only follow same-site paths under /stage/.
+      return next && /^\/stage\//.test(next) ? next : 'work/';
+    }
+
+    try {
+      if (sessionStorage.getItem(KEY) === '1') location.replace(nextUrl());
+    } catch (e) {}
+
+    async function sha256(text) {
+      var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    }
+
+    document.getElementById('gate').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var input = document.getElementById('password');
+      if (await sha256(input.value) === HASH) {
+        try { sessionStorage.setItem(KEY, '1'); } catch (err) {}
+        location.href = nextUrl();
+      } else {
+        document.getElementById('error').textContent = 'Incorrect password';
+        input.select();
+      }
+    });
+  </script>
+</body>
+</html>
