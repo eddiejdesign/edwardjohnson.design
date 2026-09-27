@@ -1,0 +1,3 @@
+# Plaintext NDA content. NEVER commit. Only the encrypted output in stage/vault/ is committed.
+/private/
+/node_modules/
