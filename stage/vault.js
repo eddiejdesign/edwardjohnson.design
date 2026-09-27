@@ -104,12 +104,21 @@
     return urlCache[rel];
   }
 
+  var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function hydrate(el, attr) {
+    var video = el.tagName === 'VIDEO' && attr === 'src';
+    // Motion-sensitive viewers keep the still underneath; skip the download.
+    if (video && reduceMotion) return Promise.resolve();
     var rel = el.getAttribute('data-vault-' + attr);
     return assetUrl(rel).then(function (url) {
       el.setAttribute(attr, url);
       el.removeAttribute('data-vault-' + attr);
       if (el.tagName === 'SOURCE') el.parentNode.load();
+      if (video) {
+        el.addEventListener('playing', function () { el.classList.add('is-playing'); }, { once: true });
+        el.play().catch(function () {});
+      }
     });
   }
 

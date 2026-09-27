@@ -215,6 +215,42 @@ img {
   object-fit: cover;
 }
 
+/* Videos sit over their still and fade in once playing (vault.js adds .is-playing). */
+.media-video {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.media-video.is-playing {
+  opacity: 1;
+}
+
+/* Figma crops the 932px banner inside the 720px frame, offset -212px. */
+.card-video {
+  left: -29.444%;
+  width: 129.444%;
+}
+
+.band-media {
+  position: relative;
+}
+
+.panel-video {
+  width: 33.343%;
+}
+
+.panel-left {
+  left: 0;
+}
+
+.panel-right {
+  left: 66.657%;
+}
+
 .card-title {
   font-weight: 800;
   font-size: 28px;
