@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Encrypts the password-protected portfolio content.
 //
-//   VAULT_PASSWORD=... node scripts/vault.mjs pack      private/  -> stage/vault/
-//   VAULT_PASSWORD=... node scripts/vault.mjs unpack    stage/vault/ -> private/
+//   VAULT_PASSWORD=... node scripts/vault.mjs pack      private/  -> vault/
+//   VAULT_PASSWORD=... node scripts/vault.mjs unpack    vault/ -> private/
 //   VAULT_PASSWORD=... NEW_VAULT_PASSWORD=... node scripts/vault.mjs rekey
 //
 // private/ holds the plaintext source and is gitignored — it must never be
-// committed (the repo is public). Only the ciphertext in stage/vault/ is.
+// committed (the repo is public). Only the ciphertext in vault/ is.
 //
 // Layout of private/:
 //   pages/<id>.html   page fragments, loaded by the shell page with that id
@@ -24,7 +24,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const SRC = path.join(ROOT, 'private');
-const OUT = path.join(ROOT, 'stage', 'vault');
+const OUT = path.join(ROOT, 'vault');
 const MANIFEST = path.join(OUT, 'manifest.json');
 const ITERATIONS = 600000;
 const CHECK_TEXT = 'vault-ok';
@@ -154,7 +154,7 @@ async function pack(password, { newSalt = false } = {}) {
 
 async function unpack(password) {
   const manifest = readManifest();
-  if (!manifest) die('no stage/vault/manifest.json to unpack');
+  if (!manifest) die('no vault/manifest.json to unpack');
   const keys = await keysFor(password, manifest);
   const read = async (name) => open(keys, new Uint8Array(fs.readFileSync(path.join(OUT, name))));
   const index = JSON.parse(dec.decode(await read(manifest.index)));
