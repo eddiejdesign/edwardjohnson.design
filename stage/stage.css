@@ -91,16 +91,31 @@ img {
 /* ---------- Top bar ---------- */
 
 .topbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 5;
+  z-index: 10;
+  transition: transform 0.3s ease, background-color 0.3s ease;
   height: 51px;
   padding: 0 var(--gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.topbar.is-hidden {
+  transform: translateY(-100%);
+}
+
+.topbar.is-solid {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar {
+    transition: none;
+  }
 }
 
 .topbar .logo svg {
@@ -433,12 +448,12 @@ img {
 }
 
 .split.final {
-  /* Figma frame is 381px; the image overhangs it, so the next gap starts at the frame edge. */
-  height: 381px;
+  height: 507px;
+  align-items: center;
 }
 
 .split.final .text-block {
-  padding-top: 159px;
+  padding-top: 0;
 }
 
 .text-block h2 {
