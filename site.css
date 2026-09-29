@@ -265,10 +265,11 @@ img {
   opacity: 1;
 }
 
-/* Figma crops the 932px banner inside the 720px frame, offset -212px. */
+/* Figma crops the 937x401 banner inside the 720x400 frame, offset -217px. */
 .card-video {
-  left: -29.444%;
-  width: 129.444%;
+  left: -30.139%;
+  width: 130.139%;
+  height: 100.25%;
 }
 
 .band-media {
@@ -759,6 +760,99 @@ img {
   top: 93.04%;
 }
 
+/* Work page: footer sits 48px below the last card. */
+#vault + .site-footer {
+  padding-top: 48px;
+  height: 91px;
+}
+
+/* ---------- Project 3: style guide ---------- */
+
+.project-hero.hero-wide.hero-sg {
+  background-image: url('assets/style-guide-hero-bg.jpg');
+}
+
+/* iMac (incl. its overhanging bezel) sits at x 717.6 / y 81.5 in the 1440x524 frame. */
+.hero-imac {
+  width: 486px;
+  margin: 81.5px -3.4px 0 117.6px;
+  align-self: flex-start;
+}
+
+.hero-imac img {
+  width: 486px;
+  height: auto;
+}
+
+.sg-pair {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 20.05px;
+}
+
+.sg-pair img:first-child {
+  width: 290.71px;
+  height: auto;
+}
+
+.sg-pair img:last-child {
+  width: 289.25px;
+  height: auto;
+}
+
+.grid-3 > img {
+  width: 100%;
+  height: auto;
+}
+
+.sg-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 960 / 420;
+  background: #fff;
+}
+
+.sg-sitemap {
+  background: #e5e5e5;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #000;
+  font-size: 14px;
+}
+
+.sg-sitemap img {
+  width: 960px;
+  max-width: 100%;
+  height: auto;
+}
+
+.sg-brands {
+  display: grid;
+  grid-template-columns: 361fr 359fr 361fr 359fr;
+}
+
+.sg-brands img {
+  width: 100%;
+  height: auto;
+}
+
+.sg-cta {
+  background: #00a0de;
+  height: 127px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sg-cta .btn {
+  width: 238px;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1100px) {
@@ -817,6 +911,26 @@ img {
   .hero-video {
     max-width: 600px;
   }
+
+  .hero-imac {
+    width: 100%;
+    max-width: 486px;
+    margin: 0;
+    align-self: center;
+  }
+
+  .hero-imac img {
+    width: 100%;
+  }
+
+  .sg-pair {
+    justify-content: flex-start;
+  }
+
+  .sg-pair img:first-child,
+  .sg-pair img:last-child {
+    width: calc(50% - 10px);
+  }
 }
 
 @media (max-width: 900px) {
@@ -831,6 +945,14 @@ img {
 
   .grid-3 {
     gap: 24px;
+  }
+
+  .sg-brands {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sg-sitemap {
+    padding: 0 16px 10px;
   }
 
   .categories {
