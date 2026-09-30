@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Tracker — Tools</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .tabs button {
+      flex: 1;
+      background: transparent;
+      color: var(--fg-muted);
+    }
+
+    .tabs button.active {
+      background: var(--surface);
+      color: var(--fg);
+      border-color: var(--accent);
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+
+    .panel[hidden] { display: none; }
+
+    .clock {
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 16px;
+    }
+
+    .clock.running { color: var(--accent); }
+
+    .field-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .field-row input { flex: 1; min-width: 0; }
+    .field-row input.duration { flex: 0 0 110px; }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-row button { flex: 1; }
+    .btn-row button[hidden] { display: none; }
+
+    .week-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .week-label {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .week-total {
+      font-size: 32px;
+      font-weight: 300;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 20px;
+    }
+
+    .week-total small {
+      font-size: 12px;
+      color: var(--fg-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    ul.entries {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .entry-note {
+      flex: 1;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .entry-note.none { color: var(--fg-muted); }
+
+    .entry-time {
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      color: var(--fg-muted);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      gap: 16px;
+    }
+
+    .footer-row button,
+    .footer-row label {
+      background: transparent;
+      border: none;
+      padding: 4px 0;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      cursor: pointer;
+    }
+
+    .footer-row button:hover,
+    .footer-row label:hover { color: var(--accent); }
+
+    .hint {
+      font-size: 12px;
+      color: var(--fg-muted);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back-link" href="../">&larr; Tools</a>
+    <h1>Time Tracker</h1>
+    <p class="subtitle">Track time with a stopwatch or enter it by hand. Totals by week, Monday–Sunday.</p>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="active" id="tab-stopwatch" role="tab">Stopwatch</button>
+      <button type="button" id="tab-manual" role="tab">Manual</button>
+    </div>
+
+    <div class="panel" id="panel-stopwatch">
+      <div class="clock" id="clock">0:00:00</div>
+      <div class="field-row">
+        <input type="text" id="sw-note" placeholder="What are you working on?" autocomplete="off">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="primary" id="sw-start">Start</button>
+        <button type="button" id="sw-pause" hidden>Pause</button>
+        <button type="button" id="sw-save" hidden>Stop &amp; save</button>
+        <button type="button" id="sw-discard" hidden>Discard</button>
+      </div>
+    </div>
+
+    <form class="panel" id="panel-manual" hidden>
+      <div class="field-row">
+        <input type="text" id="man-duration" class="duration" placeholder="1:30" autocomplete="off" inputmode="text" aria-label="Duration">
+        <input type="text" id="man-note" placeholder="What did you work on?" autocomplete="off">
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="primary">Add time</button>
+      </div>
+      <p class="hint">Duration as h:mm (1:30), decimal hours (1.5), or minutes (45m). Added to the week shown below.</p>
+    </form>
+
+    <div class="week-nav">
+      <button type="button" class="icon-btn" id="prev-week" aria-label="Previous week">&larr;</button>
+      <div class="week-label" id="week-label"></div>
+      <button type="button" class="icon-btn" id="next-week" aria-label="Next week">&rarr;</button>
+    </div>
+    <div class="week-total" id="week-total"></div>
+
+    <ul class="entries" id="entries"></ul>
+    <p class="empty-state" id="empty" hidden>No time logged this week.</p>
+
+    <div class="footer-row">
+      <button type="button" id="this-week">This week</button>
+      <span>
+        <button type="button" id="export">Export</button>
+        &nbsp;·&nbsp;
+        <label for="import-file">Import</label>
+        <input type="file" id="import-file" accept="application/json" hidden>
+      </span>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'tools.time-tracker';
+    const $ = id => document.getElementById(id);
+
+    // state: entries [{id, week, seconds, note}] where week = Monday as YYYY-MM-DD
+    //        timer { startedAt: ms|null, elapsed: ms, weekStarted } | null
+    let state = load();
+    let viewWeek = weekOf(new Date());
+
+    function load() {
+      try {
+        const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (s && Array.isArray(s.entries)) return { entries: s.entries, timer: s.timer || null };
+      } catch {}
+      return { entries: [], timer: null };
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // Ask the browser not to evict this data under storage pressure.
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function ymd(d) {
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    function parseYmd(s) {
+      const [y, m, d] = s.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function weekOf(date) {
+      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+      return ymd(d);
+    }
+
+    function shiftWeek(week, n) {
+      const d = parseYmd(week);
+      d.setDate(d.getDate() + n * 7);
+      return ymd(d);
+    }
+
+    function weekLabel(week) {
+      const start = parseYmd(week);
+      const end = parseYmd(shiftWeek(week, 1));
+      end.setDate(end.getDate() - 1);
+      const fmt = (d, y) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', ...(y ? { year: 'numeric' } : {}) });
+      const label = `${fmt(start)} – ${fmt(end, true)}`;
+      return week === weekOf(new Date()) ? `This week · ${label}` : label;
+    }
+
+    function fmtClock(sec) {
+      sec = Math.floor(sec);
+      return `${Math.floor(sec / 3600)}:${pad(Math.floor(sec / 60) % 60)}:${pad(sec % 60)}`;
+    }
+
+    function fmtDuration(sec) {
+      const m = Math.round(sec / 60);
+      return `${Math.floor(m / 60)}h ${pad(m % 60)}m`;
+    }
+
+    // Returns seconds, or null if unparseable.
+    function parseDuration(str) {
+      str = str.trim().toLowerCase();
+      let m;
+      if ((m = str.match(/^(\d+):(\d{1,2})$/))) return (+m[1] * 60 + +m[2]) * 60;
+      if ((m = str.match(/^(\d+(?:\.\d+)?)\s*m(?:in(?:ute)?s?)?$/))) return Math.round(+m[1] * 60);
+      if ((m = str.match(/^(\d+(?:\.\d+)?)\s*(?:h(?:rs?|ours?)?)?$/))) return Math.round(+m[1] * 3600);
+      if ((m = str.match(/^(\d+)\s*h\s*(\d+)\s*m?$/))) return (+m[1] * 60 + +m[2]) * 60;
+      return null;
+    }
+
+    // ---- Stopwatch ----
+    function timerElapsedMs() {
+      const t = state.timer;
+      if (!t) return 0;
+      return t.elapsed + (t.startedAt ? Date.now() - t.startedAt : 0);
+    }
+
+    function renderTimer() {
+      const t = state.timer;
+      const running = !!(t && t.startedAt);
+      $('clock').textContent = fmtClock(timerElapsedMs() / 1000);
+      $('clock').classList.toggle('running', running);
+      $('sw-start').hidden = !!t && running;
+      $('sw-start').textContent = t ? 'Resume' : 'Start';
+      $('sw-pause').hidden = !running;
+      $('sw-save').hidden = !t;
+      $('sw-discard').hidden = !t || running;
+    }
+
+    $('sw-start').addEventListener('click', () => {
+      if (!state.timer) state.timer = { startedAt: Date.now(), elapsed: 0, week: weekOf(new Date()) };
+      else state.timer.startedAt = Date.now();
+      save();
+      renderTimer();
+    });
+
+    $('sw-pause').addEventListener('click', () => {
+      state.timer.elapsed = timerElapsedMs();
+      state.timer.startedAt = null;
+      save();
+      renderTimer();
+    });
+
+    $('sw-save').addEventListener('click', () => {
+      const seconds = Math.round(timerElapsedMs() / 1000);
+      if (seconds > 0) {
+        state.entries.push({
+          id: crypto.randomUUID(),
+          week: state.timer.week,
+          seconds,
+          note: $('sw-note').value.trim()
+        });
+        viewWeek = state.timer.week;
+      }
+      state.timer = null;
+      $('sw-note').value = '';
+      save();
+      renderTimer();
+      renderWeek();
+    });
+
+    $('sw-discard').addEventListener('click', () => {
+      if (!confirm('Discard this timer?')) return;
+      state.timer = null;
+      save();
+      renderTimer();
+    });
+
+    setInterval(() => { if (state.timer && state.timer.startedAt) renderTimer(); }, 500);
+
+    // ---- Tabs ----
+    function showTab(name) {
+      const sw = name === 'stopwatch';
+      $('panel-stopwatch').hidden = !sw;
+      $('panel-manual').hidden = sw;
+      $('tab-stopwatch').classList.toggle('active', sw);
+      $('tab-manual').classList.toggle('active', !sw);
+      if (!sw) $('man-duration').focus();
+    }
+    $('tab-stopwatch').addEventListener('click', () => showTab('stopwatch'));
+    $('tab-manual').addEventListener('click', () => showTab('manual'));
+
+    // ---- Manual entry ----
+    $('panel-manual').addEventListener('submit', e => {
+      e.preventDefault();
+      const seconds = parseDuration($('man-duration').value);
+      if (!seconds) {
+        $('man-duration').focus();
+        $('man-duration').style.borderColor = 'var(--accent)';
+        return;
+      }
+      state.entries.push({ id: crypto.randomUUID(), week: viewWeek, seconds, note: $('man-note').value.trim() });
+      $('man-duration').value = '';
+      $('man-note').value = '';
+      $('man-duration').style.borderColor = '';
+      save();
+      renderWeek();
+      $('man-duration').focus();
+    });
+
+    // ---- Week view ----
+    function renderWeek() {
+      $('week-label').textContent = weekLabel(viewWeek);
+      const entries = state.entries.filter(en => en.week === viewWeek);
+      const total = entries.reduce((sum, en) => sum + en.seconds, 0);
+      $('week-total').innerHTML = `${fmtDuration(total)}<small>total</small>`;
+      $('empty').hidden = entries.length > 0;
+
+      const list = $('entries');
+      list.innerHTML = '';
+      entries.slice().reverse().forEach(en => {
+        const li = document.createElement('li');
+        li.className = 'entry';
+
+        const note = document.createElement('span');
+        note.className = 'entry-note' + (en.note ? '' : ' none');
+        note.textContent = en.note || 'No description';
+
+        const time = document.createElement('span');
+        time.className = 'entry-time';
+        time.textContent = fmtDuration(en.seconds);
+
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'icon-btn';
+        edit.textContent = '✎';
+        edit.setAttribute('aria-label', 'Edit entry');
+        edit.addEventListener('click', () => {
+          const d = prompt('Duration (h:mm, 1.5, or 45m):', `${Math.floor(en.seconds / 3600)}:${pad(Math.round(en.seconds / 60) % 60)}`);
+          if (d === null) return;
+          const secs = parseDuration(d);
+          if (!secs) return alert('Could not read that duration.');
+          const n = prompt('Description:', en.note);
+          if (n === null) return;
+          en.seconds = secs;
+          en.note = n.trim();
+          save();
+          renderWeek();
+        });
+
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'icon-btn';
+        del.textContent = '✕';
+        del.setAttribute('aria-label', 'Delete entry');
+        del.addEventListener('click', () => {
+          state.entries = state.entries.filter(x => x.id !== en.id);
+          save();
+          renderWeek();
+        });
+
+        li.append(note, time, edit, del);
+        list.appendChild(li);
+      });
+    }
+
+    $('prev-week').addEventListener('click', () => { viewWeek = shiftWeek(viewWeek, -1); renderWeek(); });
+    $('next-week').addEventListener('click', () => { viewWeek = shiftWeek(viewWeek, 1); renderWeek(); });
+    $('this-week').addEventListener('click', () => { viewWeek = weekOf(new Date()); renderWeek(); });
+
+    // ---- Backup ----
+    $('export').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify({ entries: state.entries }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `time-tracker-${ymd(new Date())}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    $('import-file').addEventListener('change', async e => {
+      const file = e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      try {
+        const data = JSON.parse(await file.text());
+        if (!Array.isArray(data.entries)) throw new Error();
+        if (!confirm(`Replace all current entries with ${data.entries.length} imported entries?`)) return;
+        state.entries = data.entries;
+        save();
+        renderWeek();
+      } catch {
+        alert('That file is not a valid time tracker export.');
+      }
+    });
+
+    renderTimer();
+    renderWeek();
+  </script>
+</body>
+</html>
